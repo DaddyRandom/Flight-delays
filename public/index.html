@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Check flight compensation eligibility and submit claims for delayed or cancelled flights">
+  <meta name="theme-color" content="#2563eb">
+
+  <title>TravelComp - Flight Compensation Tracker</title>
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2L2 9L16 16L30 9L16 2Z" fill="currentColor" opacity="0.8"/>
+            <path d="M2 16L16 23L30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M2 23L16 30L30 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-text">TravelComp</span>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn" onclick="showSection('search')">Search</button>
+          <button class="nav-btn" onclick="showSection('claim')">Submit Claim</button>
+          <button class="nav-btn" onclick="showSection('claims')">My Claims</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+
+      <!-- Hero Section -->
+      <section id="hero" class="section hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">Get Compensation for Delayed Flights</h1>
+          <p class="hero-subtitle">Check your eligibility in seconds. Up to €600 compensation under EU261 regulations.</p>
+          <button class="btn btn-primary btn-large" onclick="showSection('search')">
+            Check Your Flight
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">€600</div>
+            <div class="stat-label">Max Compensation</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">3hrs+</div>
+            <div class="stat-label">Delay Required</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">3 years</div>
+            <div class="stat-label">Claim Period</div>
+          </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="how-it-works">
+          <h2 class="section-title">How It Works</h2>
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-number">1</div>
+              <h3>Search Flight</h3>
+              <p>Enter your flight number and date to check delay status</p>
+            </div>
+            <div class="step-card">
+              <div class="step-number">2</div>
+              <h3>Check Eligibility</h3>
+              <p>Instantly see if you qualify for compensation</p>
+            </div>
+            <div class="step-card">
+              <div class="step-number">3</div>
+              <h3>Submit Claim</h3>
+              <p>Fill out the form and we'll handle the rest</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Flight Search Section -->
+      <section id="search" class="section" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-title">Search Flight</h2>
+          <p class="section-subtitle">Enter flight details to check compensation eligibility</p>
+        </div>
+
+        <div class="card">
+          <form id="searchForm" class="form">
+            <div class="form-group">
+              <label for="flightNumber" class="form-label">Flight Number</label>
+              <input
+                type="text"
+                id="flightNumber"
+                class="form-input"
+                placeholder="e.g. BA123, UA456"
+                required
+              >
+              <small class="form-help">Format: 2-3 letters followed by 1-4 digits</small>
+            </div>
+
+            <div class="form-group">
+              <label for="flightDate" class="form-label">Flight Date</label>
+              <input
+                type="date"
+                id="flightDate"
+                class="form-input"
+                required
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              <span class="btn-text">Search Flight</span>
+              <span class="btn-loader" style="display: none;">
+                <span class="spinner"></span> Searching...
+              </span>
+            </button>
+          </form>
+
+          <!-- Test Scenarios -->
+          <div class="test-scenarios">
+            <p class="test-scenarios-title">Try these test scenarios:</p>
+            <div class="test-buttons">
+              <button class="btn btn-secondary btn-small" onclick="testScenario('delayed_3h')">
+                3h Delay
+              </button>
+              <button class="btn btn-secondary btn-small" onclick="testScenario('delayed_4h')">
+                4h Delay
+              </button>
+              <button class="btn btn-secondary btn-small" onclick="testScenario('cancelled')">
+                Cancelled
+              </button>
+              <button class="btn btn-secondary btn-small" onclick="testScenario('short_delay')">
+                Short Delay
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flight Results -->
+        <div id="flightResults" class="flight-results" style="display: none;">
+          <!-- Results will be inserted here -->
+        </div>
+      </section>
+
+      <!-- Submit Claim Section -->
+      <section id="claim" class="section" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-title">Submit Compensation Claim</h2>
+          <p class="section-subtitle">Fill in your flight details to start your claim</p>
+        </div>
+
+        <div class="card">
+          <form id="claimForm" class="form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="claimFlightNumber" class="form-label">Flight Number*</label>
+                <input
+                  type="text"
+                  id="claimFlightNumber"
+                  class="form-input"
+                  placeholder="BA123"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="claimFlightDate" class="form-label">Flight Date*</label>
+                <input
+                  type="date"
+                  id="claimFlightDate"
+                  class="form-input"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="claimAirline" class="form-label">Airline*</label>
+              <input
+                type="text"
+                id="claimAirline"
+                class="form-input"
+                placeholder="British Airways"
+                required
+              >
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="claimDeparture" class="form-label">Departure Airport*</label>
+                <input
+                  type="text"
+                  id="claimDeparture"
+                  class="form-input"
+                  placeholder="LHR"
+                  maxlength="3"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="claimArrival" class="form-label">Arrival Airport*</label>
+                <input
+                  type="text"
+                  id="claimArrival"
+                  class="form-input"
+                  placeholder="JFK"
+                  maxlength="3"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="claimIssueType" class="form-label">Issue Type*</label>
+              <select id="claimIssueType" class="form-input" required>
+                <option value="">Select issue type</option>
+                <option value="delay">Flight Delayed</option>
+                <option value="cancellation">Flight Cancelled</option>
+                <option value="denied_boarding">Denied Boarding</option>
+                <option value="missed_connection">Missed Connection</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="claimDelay" class="form-label">Delay Duration (minutes)</label>
+              <input
+                type="number"
+                id="claimDelay"
+                class="form-input"
+                placeholder="180"
+                min="0"
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              <span class="btn-text">Submit Claim</span>
+              <span class="btn-loader" style="display: none;">
+                <span class="spinner"></span> Submitting...
+              </span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- My Claims Section -->
+      <section id="claims" class="section" style="display: none;">
+        <div class="section-header">
+          <h2 class="section-title">My Claims</h2>
+          <p class="section-subtitle">Track your compensation claims</p>
+        </div>
+
+        <div id="claimsList" class="claims-list">
+          <!-- Claims will be inserted here -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Toast Notifications -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 TravelComp. Flight compensation under EU261 and US DOT regulations.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/app.js"></script>
+</body>
+</html>
