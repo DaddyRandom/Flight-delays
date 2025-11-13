@@ -327,8 +327,27 @@ app.get('/api/claim-reference/:reference', (req, res) => {
  * Generate mock flight data for testing
  */
 function generateMockFlightData(flightNumber, date) {
-  const airlines = ['United Airlines', 'American Airlines', 'Delta Air Lines', 'British Airways', 'Lufthansa'];
-  const airports = ['JFK', 'LAX', 'ORD', 'LHR', 'CDG', 'FRA', 'SFO', 'ATL'];
+  // Expanded airline list
+  const airlines = [
+    'American Airlines', 'United Airlines', 'Delta Air Lines', 'Southwest Airlines',
+    'JetBlue Airways', 'Alaska Airlines', 'Spirit Airlines', 'Frontier Airlines',
+    'British Airways', 'Air France', 'Lufthansa', 'KLM', 'Iberia', 'Ryanair',
+    'easyJet', 'Emirates', 'Qatar Airways', 'Singapore Airlines', 'Cathay Pacific',
+    'Air Canada', 'WestJet', 'Qantas', 'ANA', 'Japan Airlines'
+  ];
+
+  // Expanded airport list with major hubs
+  const airports = [
+    // US Major Hubs
+    'ATL', 'DFW', 'DEN', 'ORD', 'LAX', 'JFK', 'LAS', 'MCO', 'MIA', 'CLT',
+    'SEA', 'EWR', 'SFO', 'PHX', 'IAH', 'BOS', 'FLL', 'MSP', 'LGA', 'DTW',
+    // European Hubs
+    'LHR', 'CDG', 'FRA', 'AMS', 'MAD', 'BCN', 'FCO', 'MUC', 'DUB', 'ZRH',
+    // Asian Hubs
+    'NRT', 'HND', 'SIN', 'HKG', 'ICN', 'BKK', 'DXB', 'DOH', 'PEK', 'PVG',
+    // Other Major
+    'YYZ', 'YVR', 'SYD', 'MEL', 'MEX', 'GRU'
+  ];
 
   const randomDelay = Math.floor(Math.random() * 300);
   const departure = airports[Math.floor(Math.random() * airports.length)];
